@@ -1,0 +1,54 @@
+<div
+  class="grid md:grid-cols-2 lg:grid-cols-3 p-1"
+  *ngFor="let project of projects"
+>
+  <mat-card class="my-4 g-2 flex-wrap">
+    <mat-card-header>
+      <mat-card-title>{{ project.project_name }}</mat-card-title>
+      <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
+    </mat-card-header>
+    <img
+      mat-card-image
+      src="http://localhost:3000/{{ project.image }}"
+      class="h-24 object-cover rounded-b-lg my-1"
+      alt="Image"
+    />
+    <mat-card-content>
+      <!-- <div *ngIf="project.image">
+        <img
+          mat-card-image
+          src="http://localhost:3000/uploads/{{ project.image }}"
+          alt="Image"
+        />
+      </div> -->
+      <iframe
+        src="http://localhost:3000/{{ project.documentation }}"
+        class="h-8 w-8"
+        frameborder="0"
+      ></iframe>
+    </mat-card-content>
+    <mat-card-actions>
+      <a
+        mat-list-item
+        routerLink="/project/{{ project.id }}"
+        routerLinkActive="active"
+        >Edit</a
+      >
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteProject(project.id)"
+      >
+        Delete
+        <!-- <mat-icon>delete</mat-icon> -->
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- <div
+  class="grid md:grid-cols-2 lg:grid-cols-3"
+  *ngFor="let project of projects"
+>
+
+</div> -->

@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+            <div *ngIf="submitted && f['email'].errors">
+              <mat-error *ngIf="f['email'].errors?.['required']">Email is required</mat-error>
+            </div>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Password</mat-label>
+            <input type="password" matInput formControlName="password">
+            <div *ngIf="submitted && f['password'].errors">
+              <mat-error *ngIf="f['password'].errors?.['required']">Password is required</mat-error>
+            </div>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button [disabled]="loading" mat-raised-button color="primary" type="submit">
+        <mat-spinner *ngIf="loading" class="h-5"></mat-spinner>
+        Login
+      </button>
+      <a routerLink="../register">Register</a>
+    </mat-card-actions>
+
+  </mat-card>
+</form>

@@ -1,0 +1,45 @@
+<!-- <form (ngSubmit)="onSubmit()" #projectForm="ngForm"> -->
+<form (ngSubmit)="onSubmit()" [formGroup]="projectForm">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{title}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field class="full-width">
+        <mat-label>Project Name</mat-label>
+        <input matInput type="text" placeholder="Name" formControlName="project_name">
+        <div *ngIf="myForm['project_name'].errors">
+          <mat-error *ngIf="myForm['project_name'].errors?.['required']">Project Name is required</mat-error>
+        </div>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start Date" formControlName="start_date">
+          <input matEndDate placeholder="End Date" formControlName="end_date">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <!-- <div *ngIf="myForm['duration'].errors">
+          <mat-error *ngIf="myForm['duration'].errors?.['required']">Duration is required</mat-error>
+        </div> -->
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput placeholder="Description" formControlName="description" rows="2"></textarea>
+        <div *ngIf="myForm['description'].errors">
+          <mat-error *ngIf="myForm['description'].errors?.['required']">Description is required</mat-error>
+        </div>
+      </mat-form-field>
+
+      <input type="file" (change)="onFileSelected($event, 'documentation')" accept=".pdf, .doc, .docx" required>
+      <input type="file" (change)="onFileSelected($event, 'image')" accept=".jpg, .jpeg, .png" required>
+      <!-- <input type="file" (change)="onFileSelected($event, 'video')" accept=".mp4, .av1, .mkv" required> -->
+
+    </mat-card-content>
+  </mat-card>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!projectForm.valid">
+    {{ id ? 'Update Project' : 'Add Project' }}
+  </button>
+</form>

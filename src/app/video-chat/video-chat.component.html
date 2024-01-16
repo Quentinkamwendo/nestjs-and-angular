@@ -1,0 +1,48 @@
+<div class="container mx-auto my-8 p-8 bg-gray-100 rounded-md shadow-md">
+  <video #localVideo autoplay muted></video>
+  <div *ngFor="let remotePeer of remotePeers">
+    <video [srcObject]="remotePeer.streams" autoplay></video>
+  </div>
+  <form [formGroup]="roomForm" (ngSubmit)="joinRoom()">
+    <mat-form-field class="w-full">
+      <input
+        matInput
+        placeholder="Enter room name"
+        formControlName="roomName"
+      />
+    </mat-form-field>
+    <button class="my-2" mat-raised-button color="primary">Join Room</button>
+  </form>
+
+  <div class="flex justify-between mt-4">
+    <button mat-raised-button color="warn" (click)="leaveRoom()">
+      Leave Room
+    </button>
+  </div>
+  <div class="mt-6">
+    <h3 class="text-lg font-bold mb-2">Users in the room:</h3>
+    <ul class="mb-2">
+      <li *ngFor="let user of users">
+        {{ user.id }}
+        <video [src]="user.videoStream" autoplay muted></video>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mt-6">
+    <webcam
+      [allowCameraSwitch]="true"
+      [trigger]="triggerObservable"
+      [width]="320"
+      [height]="240"
+      (imageCapture)="handleImage($event)"
+    ></webcam>
+    <button mat-raised-button color="primary" (click)="triggerSnapshot()">
+      Take the shot
+    </button>
+    <div *ngIf="webCamImage">
+      <h2>Here is your image</h2>
+      <img [src]="webCamImage.imageAsDataUrl" alt="" />
+    </div>
+  </div>
+</div>

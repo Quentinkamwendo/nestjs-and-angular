@@ -1,0 +1,12 @@
+.full-width {
+  width: 100%;
+}
+
+.spinner {
+  height: 24px;
+}
+
+.shipping-card {
+  min-width: 120px;
+  margin: 20px auto;
+}

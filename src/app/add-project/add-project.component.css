@@ -1,0 +1,9 @@
+.full-width {
+  width: 100%;
+}
+
+.form-body {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
