@@ -1,8 +1,5 @@
-<div
-  class="grid md:grid-cols-2 lg:grid-cols-3 p-1"
-  *ngFor="let project of projects"
->
-  <mat-card class="my-4 g-2 flex-wrap">
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+  <mat-card *ngFor="let project of projects">
     <mat-card-header>
       <mat-card-title>{{ project.project_name }}</mat-card-title>
       <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
@@ -10,17 +7,14 @@
     <img
       mat-card-image
       src="http://localhost:3000/{{ project.image }}"
-      class="h-24 object-cover rounded-b-lg my-1"
+      class="h-48 object-cover rounded-b-lg my-1"
       alt="Image"
     />
+    <object
+      data="http://localhost:3000/{{ project.documentation }}"
+      type=""
+    ></object>
     <mat-card-content>
-      <!-- <div *ngIf="project.image">
-        <img
-          mat-card-image
-          src="http://localhost:3000/uploads/{{ project.image }}"
-          alt="Image"
-        />
-      </div> -->
       <iframe
         src="http://localhost:3000/{{ project.documentation }}"
         class="h-8 w-8"

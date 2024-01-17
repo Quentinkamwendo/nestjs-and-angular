@@ -76,6 +76,18 @@ export class ProjectService {
       throw new NotFoundException('Project not found');
     }
 
+    const parsedStartDate = parse(
+      projectDto.start_date,
+      'EEE MMM dd yyyy',
+      new Date(),
+    );
+    const parsedEndDate = parse(
+      projectDto.end_date,
+      'EEE MMM dd yyyy',
+      new Date(),
+    );
+    const startDate = format(parsedStartDate, 'yyyy-MM-dd');
+    const endDate = format(parsedEndDate, 'yyyy-MM-dd');
     const duration = differenceInDays(
       projectDto.end_date,
       projectDto.start_date,
@@ -87,8 +99,8 @@ export class ProjectService {
     return await this.projectRepository.update(id, {
       project_name: projectDto.project_name,
       description: projectDto.description,
-      start_date: projectDto.start_date,
-      end_date: projectDto.end_date,
+      start_date: startDate,
+      end_date: endDate,
       duration: duration,
       documentation: files.documentation[0].path,
       image: files.image[0].path,
@@ -110,7 +122,7 @@ export class ProjectService {
 
   private deleteFile(filename: string) {
     if (filename) {
-      const filePath = path.join(__dirname, '..', '..', 'uploads', filename);
+      const filePath = path.join(__dirname, '..', '..', filename);
       fs.promises.unlink(filePath);
     }
   }

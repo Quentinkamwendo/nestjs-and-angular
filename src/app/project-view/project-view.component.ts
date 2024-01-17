@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AddProjectService } from '../add-project/add-project.service';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
@@ -12,7 +12,6 @@ export class ProjectViewComponent implements OnInit {
   projects: any[] = [];
   constructor(
     private addProjectService: AddProjectService,
-    private breakPointObserver: BreakpointObserver
     ) {}
   ngOnInit(): void {
     this.addProjectService.getProjects().pipe(first()).subscribe((response) => {
@@ -20,9 +19,29 @@ export class ProjectViewComponent implements OnInit {
     })
   }
 
-  getGridColumns(): number {
-    return this.breakPointObserver.isMatched(Breakpoints.Handset) ? 1 : 3;
-  }
+  private breakpointObserver = inject(BreakpointObserver);
+
+
+  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(({ matches }) => {
+      if (matches) {
+        return [
+          { cols: 1, rows: 1 },
+          { cols: 1, rows: 1 },
+          // { cols: 1, rows: 1 },
+          // { cols: 1, rows: 1 }
+        ];
+      }
+
+      return [
+        { cols: 1, rows: 1 },
+        { cols: 1, rows: 1 },
+        // { cols: 1, rows: 2 },
+        // { cols: 1, rows: 1 }
+      ];
+    })
+  );
+
 
   deleteProject(id: string) {
     this.addProjectService.deleteProject(id)
