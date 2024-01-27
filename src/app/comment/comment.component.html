@@ -1,0 +1,12 @@
+<div>
+  <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Comment</mat-label>
+      <input matInput type="text" formControlName="content">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Add</button>
+  </form>
+  <div *ngFor="let comment of comments">
+    <p>{{comment.content}}</p>
+  </div>
+</div>

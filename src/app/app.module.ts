@@ -30,6 +30,7 @@ import { ProjectViewComponent } from './project-view/project-view.component';
 import { VideoChatComponent } from './video-chat/video-chat.component';
 import { WebcamModule } from 'ngx-webcam';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { CommentComponent } from './comment/comment.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
@@ -39,7 +40,8 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     DashboardComponent,
     HomeComponent,
     ProjectViewComponent,
-    VideoChatComponent
+    VideoChatComponent,
+    CommentComponent
     ],
   imports: [
     BrowserModule,

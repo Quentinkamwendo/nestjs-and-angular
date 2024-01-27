@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './project.entity';
 import { Repository } from 'typeorm';
 import { ProjectDto } from './dto/project.dto';
-import { differenceInDays, format, parse } from 'date-fns';
+import { differenceInDays, format } from 'date-fns';
 import * as fs from 'fs';
 import * as path from 'path';
 // import { User } from 'src/users/users.entity';
@@ -35,18 +35,18 @@ export class ProjectService {
       image?: Express.Multer.File[];
     },
   ) {
-    const parsedStartDate = parse(
-      projectDto.start_date,
-      'EEE MMM dd yyyy',
-      new Date(),
-    );
-    const parsedEndDate = parse(
-      projectDto.end_date,
-      'EEE MMM dd yyyy',
-      new Date(),
-    );
-    const startDate = format(parsedStartDate, 'yyyy-MM-dd');
-    const endDate = format(parsedEndDate, 'yyyy-MM-dd');
+    // const parsedStartDate = parse(
+    //   projectDto.start_date,
+    //   'EEE MMM dd yyyy',
+    //   new Date(),
+    // );
+    // const parsedEndDate = parse(
+    //   projectDto.end_date,
+    //   'EEE MMM dd yyyy',
+    //   new Date(),
+    // );
+    const startDate = format(projectDto.start_date, 'yyyy-MM-dd');
+    const endDate = format(projectDto.end_date, 'yyyy-MM-dd');
     const duration = differenceInDays(
       projectDto.end_date,
       projectDto.start_date,
@@ -76,25 +76,21 @@ export class ProjectService {
       throw new NotFoundException('Project not found');
     }
 
-    const parsedStartDate = parse(
-      projectDto.start_date,
-      'EEE MMM dd yyyy',
-      new Date(),
-    );
-    const parsedEndDate = parse(
-      projectDto.end_date,
-      'EEE MMM dd yyyy',
-      new Date(),
-    );
-    const startDate = format(parsedStartDate, 'yyyy-MM-dd');
-    const endDate = format(parsedEndDate, 'yyyy-MM-dd');
+    if (files.documentation) {
+      this.deleteFile(project.documentation);
+      project.documentation = files.documentation[0].path;
+    }
+    if (files.image) {
+      this.deleteFile(project.image);
+      project.image = files.image[0].path;
+    }
+
+    const startDate = format(projectDto.start_date, 'yyyy-MM-dd');
+    const endDate = format(projectDto.end_date, 'yyyy-MM-dd');
     const duration = differenceInDays(
       projectDto.end_date,
       projectDto.start_date,
     );
-
-    this.deleteFile(project.documentation);
-    this.deleteFile(project.image);
 
     return await this.projectRepository.update(id, {
       project_name: projectDto.project_name,
@@ -102,8 +98,6 @@ export class ProjectService {
       start_date: startDate,
       end_date: endDate,
       duration: duration,
-      documentation: files.documentation[0].path,
-      image: files.image[0].path,
     });
     // Retrieve and return the updated project
   }
@@ -124,27 +118,6 @@ export class ProjectService {
     if (filename) {
       const filePath = path.join(__dirname, '..', '..', filename);
       fs.promises.unlink(filePath);
-    }
-  }
-
-  private async deleteProjectFiles(id: string): Promise<void> {
-    const project = await this.projectRepository.findOne({ where: { id } });
-    if (project) {
-      const imagePath = path.join(__dirname, '..', 'uploads', project.image);
-      const docPath = path.join(
-        __dirname,
-        '..',
-        'uploads',
-        project.documentation,
-      );
-      this.deleteFileIfExists(imagePath);
-      this.deleteFileIfExists(docPath);
-    }
-  }
-
-  private deleteFileIfExists(filePath: string): void {
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
     }
   }
 }

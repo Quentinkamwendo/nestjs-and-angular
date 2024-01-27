@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './_helpers/auth.guard';
 import { ProjectViewComponent } from './project-view/project-view.component';
 import { VideoChatComponent } from './video-chat/video-chat.component';
+import { CommentComponent } from './comment/comment.component';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
 const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'project', loadChildren: addProjectModule, canActivate: [AuthGuard]},
   {path: 'projectView', component: ProjectViewComponent, canActivate: [AuthGuard]},
   {path: 'videoChat', component: VideoChatComponent, canActivate: [AuthGuard]},
+  {path: 'comment', component: CommentComponent, canActivate: [AuthGuard]},
   {path: '**', redirectTo: ''}
 ];
 

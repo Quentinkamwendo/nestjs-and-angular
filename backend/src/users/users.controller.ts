@@ -41,14 +41,4 @@ export class UsersController {
   async delete(@Param('id') id: string) {
     return this.usersService.delete(id);
   }
-  // @UseGuards(LocalAuthGuard)
-  // @UseGuards(AuthGuard('local'))
-  // @Post('login')
-  // async login(@Body() createUserDto: CreateUserDto) {
-  //   return this.authService.login(createUserDto);
-  //   return this.authService.validateUser(
-  //     createUserDto.username,
-  //     createUserDto.password,
-  //   );
-  // }
 }

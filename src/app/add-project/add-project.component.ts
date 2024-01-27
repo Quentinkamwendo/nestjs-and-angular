@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AddProjectService } from './add-project.service';
 import { Project } from './project.model';
-import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  FormControl,
+  FormGroup,
+} from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,10 +14,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-add-project',
   templateUrl: './add-project.component.html',
-  styleUrls: ['./add-project.component.css']
+  styleUrls: ['./add-project.component.css'],
 })
 export class AddProjectComponent implements OnInit {
-
   projectForm!: FormGroup;
   projects: Project[] = [];
   title!: string;
@@ -44,9 +48,10 @@ export class AddProjectComponent implements OnInit {
     if (this.id) {
       // edit mode
       this.title = 'Edit Project';
-      this.projectService.getProjectById(this.id)
+      this.projectService
+        .getProjectById(this.id)
         .pipe(first())
-        .subscribe(x => {
+        .subscribe((x) => {
           this.projectForm.patchValue(x);
         });
     }
@@ -55,7 +60,7 @@ export class AddProjectComponent implements OnInit {
   }
 
   get myForm() {
-    return this.projectForm.controls
+    return this.projectForm.controls;
   }
 
   onSubmit() {
@@ -64,51 +69,66 @@ export class AddProjectComponent implements OnInit {
       const formData = new FormData();
       formData.append('project_name', projectData.project_name);
       formData.append('description', projectData.description);
-      formData.append('start_date', projectData.start_date.toDateString());
-      formData.append('end_date', projectData.end_date.toDateString());
+      formData.append('start_date', projectData.start_date.toString());
+      formData.append('end_date', projectData.end_date.toString());
       formData.append('documentation', projectData.documentation);
       formData.append('image', projectData.image);
 
       if (this.id) {
         // Update existing project
-        this.projectService.updateProject(this.id, formData)
-          .subscribe({
-            next: (response) => {
-              this._snackBar.open(`Project ${response.project_name} updated`, 'close', { duration: 5000 });
-              this.projectForm.reset();
-              this.loadProjects();
-            },
-            error: error => {
-              this._snackBar.open(error, 'close', { duration: 5000 });
-              this.submitting = false;
-            }
-          });
-      } else {
-        // Create a new project
-        this.projectService.createProject(formData)
+        this.projectService
+          .updateProject(this.id!, formData)
           .pipe(first())
           .subscribe({
             next: (response) => {
-              this._snackBar.open(`Project ${response.project_name} created`, 'close', { duration: 5000 });
+              this._snackBar.open(
+                `Project ${response.project_name} updated`,
+                'close',
+                { duration: 5000 }
+              );
+              this.projectForm.reset();
+              this.loadProjects();
+              this.router.navigateByUrl('/projectView');
+            },
+            error: (error) => {
+              this._snackBar.open(error, 'close', { duration: 5000 });
+              this.submitting = false;
+            },
+          });
+      } else {
+        // Create a new project
+        this.projectService
+          .createProject(formData)
+          .pipe(first())
+          .subscribe({
+            next: (response) => {
+              this._snackBar.open(
+                `Project ${response.project_name} created`,
+                'close',
+                { duration: 5000 }
+              );
               this.projectForm.reset();
               this.loadProjects();
               console.log(response);
 
               this.router.navigateByUrl('/dashboard');
             },
-            error: error => {
+            error: (error) => {
               this._snackBar.open(error, 'close', { duration: 5000 });
               this.submitting = false;
-            }
+            },
           });
       }
     }
   }
 
   loadProjects() {
-    this.projectService.getProjects().pipe(first()).subscribe((projects: Project[]) => {
-      this.projects = projects;
-    });
+    this.projectService
+      .getProjects()
+      .pipe(first())
+      .subscribe((projects: Project[]) => {
+        this.projects = projects;
+      });
   }
 
   onFileSelected(event: Event, field: string) {
@@ -119,6 +139,3 @@ export class AddProjectComponent implements OnInit {
     }
   }
 }
-
-
-
