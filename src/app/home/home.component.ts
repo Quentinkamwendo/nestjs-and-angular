@@ -13,7 +13,7 @@ export class HomeComponent {
   username: any;
 
   constructor(private accountService: AccountService) {
-    this.username = this.accountService.userValue?.username;
+    this.username = this.accountService.userValue?.authUser?.username;
   }
 
 }

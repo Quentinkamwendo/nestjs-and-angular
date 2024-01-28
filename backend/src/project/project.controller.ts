@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UploadedFiles,
   UseGuards,
@@ -20,6 +21,7 @@ import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import * as fs from 'fs';
 // import { Request } from 'express';
+import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('api')
 export class ProjectController {
@@ -27,8 +29,15 @@ export class ProjectController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('project')
-  getProjects(): Promise<Project[]> {
-    return this.projectService.getProjects();
+  getProjects(
+    @Query('page') page = 1,
+    @Query('limit') limit = 3,
+  ): Promise<Pagination<Project>> {
+    return this.projectService.getProjects({
+      page,
+      limit,
+      route: 'http://projectView',
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))

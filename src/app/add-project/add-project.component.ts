@@ -124,7 +124,7 @@ export class AddProjectComponent implements OnInit {
 
   loadProjects() {
     this.projectService
-      .getProjects()
+      .getProjects(1, 3)
       .pipe(first())
       .subscribe((projects: Project[]) => {
         this.projects = projects;

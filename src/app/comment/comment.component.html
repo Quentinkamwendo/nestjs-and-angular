@@ -6,7 +6,23 @@
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Add</button>
   </form>
-  <div *ngFor="let comment of comments">
+  <!-- <div *ngFor="let comment of comments">
     <p>{{comment.content}}</p>
-  </div>
+  </div> -->
+  <p *ngFor="let comment of comments">
+    <mat-toolbar class="mx-2 justify-center p-2">
+      <h2 class="grid font-bold gap-x-1">
+        {{comment.user?.username}}
+        <span class="italic">{{comment.user?.email}}</span>
+      </h2>
+      <h4 class="font-semibold">{{comment.content}}</h4>
+      <mat-toolbar-row class="flex justify-between">
+        <a routerLink="/comment/{{projectId}}/{{comment.id}}" routerLinkActive="active">
+          Edit
+        </a>
+        <button mat-raised-button color="warn" (click)="deleteComment(comment.project!.id, comment.id!)">
+          Delete</button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </p>
 </div>

@@ -7,37 +7,55 @@ import {
   Patch,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { Comment } from './comment.entity';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('api')
+@Controller('api/comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Get('comment')
-  getComments() {
-    return this.commentService.getComments();
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':projectId')
+  getComments(@Param('projectId') projectId: string) {
+    return this.commentService.getComments(projectId);
   }
 
-  @Get('comment/:id')
-  getComment(@Param('id') id: string) {
-    return this.commentService.getCommentById(id);
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':projectId/:id')
+  getComment(@Param('projectId') projectId: string, @Param('id') id: string) {
+    return this.commentService.getCommentById(projectId, id);
   }
 
-  @Post('comment')
-  createComment(@Request() req, @Body() comment: Comment): Promise<Comment> {
-    const projectId = req.project;
-    return this.commentService.createComment(projectId, comment);
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':projectId')
+  createComment(
+    @Param('projectId') projectId: string,
+    @Body() comment: Comment,
+    @Request() req,
+  ): Promise<Comment> {
+    const owner = req.user.userId;
+    return this.commentService.createComment(projectId, comment, owner);
   }
 
-  @Patch('comment/:id')
-  updateComment(@Param('id') id: string, @Body() comment: Comment) {
-    return this.commentService.updateComment(id, comment);
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':projectId/:id')
+  updateComment(
+    @Param('projectId') projectId: string,
+    @Param('id') id: string,
+    @Body() comment: Comment,
+  ) {
+    return this.commentService.updateComment(projectId, id, comment);
   }
 
-  @Delete('comment/:id')
-  deleteComment(@Param('id') id: string) {
-    return this.commentService.deleteComment(id);
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':projectId/:id')
+  deleteComment(
+    @Param('projectId') projectId: string,
+    @Param('id') id: string,
+  ) {
+    return this.commentService.deleteComment(projectId, id);
   }
 }

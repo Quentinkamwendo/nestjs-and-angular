@@ -10,31 +10,42 @@ export class CommentService {
     private readonly commentRepository: Repository<Comment>,
   ) {}
 
-  createComment(projectId, comment: Comment): Promise<Comment> {
+  createComment(projectId: string, comment: Comment, owner): Promise<Comment> {
     comment.project = { id: projectId } as any;
-    return this.commentRepository.save({
-      content: comment.content,
-      project: projectId,
+    comment.user = owner;
+    return this.commentRepository.save(comment);
+  }
+
+  async getComments(projectId: string) {
+    return await this.commentRepository.find({
+      where: { project: { id: projectId } },
+      relations: ['project', 'user'],
     });
   }
 
-  async getComments() {
-    return await this.commentRepository.find();
-  }
-
-  async getCommentById(id: string) {
-    const comment = await this.commentRepository.findOne({ where: { id } });
+  async getCommentById(projectId: string, id: string) {
+    const comment = await this.commentRepository.findOne({
+      where: { id, project: { id: projectId } },
+      relations: ['project', 'user'],
+    });
     if (!comment) {
       throw new NotFoundException('Comment not found');
     }
     return comment;
   }
 
-  async updateComment(id: string, comment: Comment) {
-    return await this.commentRepository.update(id, comment);
+  async updateComment(projectId: string, id: string, comment: Comment) {
+    await this.commentRepository.update(
+      { id, project: { id: projectId } },
+      comment,
+    );
+    return this.commentRepository.findOne({
+      where: { id, project: { id: projectId } },
+      relations: ['project', 'user'],
+    });
   }
 
-  async deleteComment(id: string) {
-    return this.commentRepository.delete(id);
+  async deleteComment(projectId: string, id: string) {
+    return this.commentRepository.delete({ id, project: { id: projectId } });
   }
 }

@@ -1,3 +1,5 @@
+import { Comment } from '../comment/comment.model';
+
 export interface Project {
   id?: string;
   project_name: string;
@@ -6,5 +8,10 @@ export interface Project {
   description: string;
   documentation: File;
   image: File;
+  comments?: Comment[];
+  user?: {
+    username?: string;
+    email?: string;
+  };
   // video: File;
 }

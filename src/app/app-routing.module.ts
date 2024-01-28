@@ -18,7 +18,8 @@ const routes: Routes = [
   {path: 'project', loadChildren: addProjectModule, canActivate: [AuthGuard]},
   {path: 'projectView', component: ProjectViewComponent, canActivate: [AuthGuard]},
   {path: 'videoChat', component: VideoChatComponent, canActivate: [AuthGuard]},
-  {path: 'comment', component: CommentComponent, canActivate: [AuthGuard]},
+  {path: 'comment/:projectId', component: CommentComponent, canActivate: [AuthGuard]},
+  {path: 'comment/:projectId/:id', component: CommentComponent, canActivate: [AuthGuard]},
   {path: '**', redirectTo: ''}
 ];
 

@@ -6,6 +6,11 @@ import { ProjectDto } from './dto/project.dto';
 import { differenceInDays, format } from 'date-fns';
 import * as fs from 'fs';
 import * as path from 'path';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 // import { User } from 'src/users/users.entity';
 
 @Injectable()
@@ -15,12 +20,17 @@ export class ProjectService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async getProjects(): Promise<Project[]> {
-    return await this.projectRepository.find();
+  async getProjects(options: IPaginationOptions): Promise<Pagination<Project>> {
+    return await paginate<Project>(this.projectRepository, options, {
+      relations: ['comments', 'user'],
+    });
   }
 
   async getProjectById(id: string): Promise<Project> {
-    const project = await this.projectRepository.findOne({ where: { id } });
+    const project = await this.projectRepository.findOne({
+      where: { id },
+      relations: ['comments', 'user'],
+    });
     if (!project) {
       throw new NotFoundException('Project not found');
     }

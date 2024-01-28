@@ -1,3 +1,4 @@
+import { Comment } from 'src/comment/comment.entity';
 import { Project } from 'src/project/project.entity';
 import {
   Column,
@@ -30,4 +31,7 @@ export class User {
 
   @OneToMany(() => Project, (project) => project.user)
   project: Project[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }

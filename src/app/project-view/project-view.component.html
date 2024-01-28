@@ -1,46 +1,61 @@
-<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
-  <mat-card *ngFor="let project of projects">
-    <mat-card-header>
-      <mat-card-title>{{ project.project_name }}</mat-card-title>
-      <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
-    </mat-card-header>
-    <img
-      mat-card-image
-      src="http://localhost:3000/{{ project.image }}"
-      class="h-48 object-cover rounded-b-lg my-1"
-      alt="Image"
-    />
-    <object
-      data="http://localhost:3000/{{ project.documentation }}"
-      type=""
-    ></object>
-    <mat-card-content>
-      <iframe
-        src="http://localhost:3000/{{ project.documentation }}"
-        class="h-8 w-8"
-        frameborder="0"
-      ></iframe>
-    </mat-card-content>
-    <mat-card-actions>
-      <a
-        mat-list-item
-        routerLink="/project/{{ project.id }}"
-        routerLinkActive="active"
-        >Edit</a
-      >
-      <a mat-list-item routerLink="/comment" routerLinkActive="active">
-        Comments
-      </a>
-      <button
-        mat-raised-button
-        color="warn"
-        (click)="deleteProject(project.id)"
-      >
-        Delete
-        <!-- <mat-icon>delete</mat-icon> -->
-      </button>
-    </mat-card-actions>
-  </mat-card>
+<div class="container">
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mt-4 ml-4">
+    <mat-card *ngFor="let project of projects">
+      <mat-card-header>
+        <mat-card-title>{{ project.project_name }}</mat-card-title>
+        <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
+      </mat-card-header>
+      <img
+        mat-card-image
+        src="http://localhost:3000/{{ project.image }}"
+        class="h-48 object-cover rounded-b-lg my-1"
+        alt="Image"
+      />
+      <object
+        data="http://localhost:3000/{{ project.documentation }}"
+        type=""
+      ></object>
+      <mat-card-content>
+        <iframe
+          src="http://localhost:3000/{{ project.documentation }}"
+          class="h-8 w-8"
+          frameborder="0"
+        ></iframe>
+      </mat-card-content>
+      <mat-card-actions>
+        <a
+          mat-list-item
+          routerLink="/project/{{ project.id }}"
+          routerLinkActive="active"
+          >Edit</a
+        >
+        <a
+          mat-list-item
+          routerLink="/comment/{{ project.id }}"
+          routerLinkActive="active"
+        >
+          {{ project.comments.length }} Comments
+        </a>
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="deleteProject(project.id)"
+        >
+          Delete
+          <!-- <mat-icon>delete</mat-icon> -->
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <mat-paginator
+    #paginator
+    [length]="totalItems"
+    [pageSize]="itemsPerPage"
+    [pageIndex]="currentPage - 1"
+    [pageSizeOptions]="[3, 6]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+  ></mat-paginator>
 </div>
 
 <!-- <div
