@@ -9,7 +9,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads',
   });
-  // app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api');
 
   app.enableCors({
     origin: 'http://localhost:4200',

@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -20,15 +22,15 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import * as fs from 'fs';
-// import { Request } from 'express';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
-@Controller('api')
+@Controller()
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get('project')
+  @HttpCode(HttpStatus.OK)
   getProjects(
     @Query('page') page = 1,
     @Query('limit') limit = 3,
@@ -42,12 +44,14 @@ export class ProjectController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('project/:id')
+  @HttpCode(HttpStatus.OK)
   async getProjectById(@Param('id') id: string) {
     return this.projectService.getProjectById(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('project')
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -117,6 +121,7 @@ export class ProjectController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch('project/:id')
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -178,6 +183,7 @@ export class ProjectController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete('project/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteProject(@Param('id') id: string) {
     await this.projectService.deleteProject(id);
     return { message: 'Project deleted Successfully' };
